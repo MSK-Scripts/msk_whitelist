@@ -1,8 +1,8 @@
 Config = {}
 ----------------------------------------------------------------
 Config.Locale = 'de'
-Config.VersionChecker = true
 Config.Debug = true
+Config.VersionChecker = true
 ----------------------------------------------------------------
 -- Add the Webhook Link in server_discordlog.lua
 Config.DiscordLog = true
@@ -62,7 +62,7 @@ Config.BanFunction = function(xPlayer, reason, timestamp, timestring)
     local playerId = xPlayer.source
     local identifier = xPlayer.identifier
 
-    exports.msk_bansystem:banPlayer(nil, playerId, timestring, reason)
+    MSK.BanPlayer(nil, playerId, timestring, reason)
 end
 ----------------------------------------------------------------
 Config.Marker = {
