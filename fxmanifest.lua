@@ -13,9 +13,8 @@ escrow_ignore {
 	'translation.lua',
 
     'client/main.lua',
-    -- 'client/functions.lua',
     'server/main.lua',
-    -- 'server/functions.lua',
+    'server/functions.lua',
     'server/discordlog.lua',
 }
 
