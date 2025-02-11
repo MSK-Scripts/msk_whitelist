@@ -4,7 +4,7 @@ games { 'gta5' }
 author 'Musiker15 - MSK Scripts'
 name 'msk_whitelist'
 description 'Ingame Whitelist'
-version '2.0.1'
+version '2.0.2'
 
 lua54 'yes'
 

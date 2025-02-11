@@ -187,7 +187,7 @@ RegisterCommand(Config.Commands.admin_inside, function(source, args, rawCommand)
     if not args[1] then args[1] = src end
     local xTarget = ESX.GetPlayerFromId(args[1])
 
-    if Config.Locations.admin_outside:match('last_position') then 
+    if Config.Locations.admin_outside == 'last_position' then 
         LastPosition[xTarget.source] = xTarget.getCoords(true)
     end
 
@@ -208,7 +208,7 @@ RegisterCommand(Config.Commands.admin_outside, function(source, args, rawCommand
     if not args[1] then args[1] = src end
     local xTarget = ESX.GetPlayerFromId(args[1])
 
-    if Config.Locations.admin_outside:match('last_position') then 
+    if Config.Locations.admin_outside == 'last_position' then 
         TriggerClientEvent('msk_whitelist:einreise', xTarget.source, LastPosition[xTarget.source])
         LastPosition[xTarget.source] = nil
     else
