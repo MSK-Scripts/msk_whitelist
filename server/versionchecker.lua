@@ -8,7 +8,7 @@ local FILE      = "Whitelist.json"
 local RESOURCE_NAME     = "msk_whitelist"
 local NAME_COLORED      = "[^2"..GetCurrentResourceName().."^0]"
 local GITHUB_URL        = "https://raw.githubusercontent.com/%s/%s/main/%s"
-local DOWNLOAD_URL      = "https://keymaster.fivem.net/"
+local DOWNLOAD_URL      = "https://github.com/MSK-Scripts/msk_whitelist/releases"
 
 local RENAME_WARNING    = NAME_COLORED .. "^3 [WARNING] This resource should not be renamed! This can lead to errors. Please rename it to^0 %s"
 local CHECK_FAILED		= NAME_COLORED .. "^1 [ERROR] Version Check failed! Http Error: %s^0\n^3Please update to the latest version.^0"
