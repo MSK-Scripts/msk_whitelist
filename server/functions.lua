@@ -1,12 +1,29 @@
-isPlayerNew = function(playerId)
-    if not playerId then return end    
-    local xPlayer = ESX.GetPlayerFromId(playerId)
-    if not xPlayer then return false end
-    local data = MySQL.query.await("SELECT * FROM users WHERE identifier = @identifier", {['@identifier'] = xPlayer.identifier})
+-- Which table holds the characters differs per framework: `users` keyed by
+-- identifier on ESX, `players` keyed by citizenid on QBCore and Qbox. msk_core
+-- answers that, so the query below is the same everywhere. The isNew column is
+-- added on start (see server/main.lua).
+playerTable = function()
+    return MSK.Offline.GetPlayerTable()
+end
 
-    if data[1] and (data[1].isNew == '1' or data[1].isNew == 1) then
+isPlayerNew = function(playerId)
+    if not playerId then return end
+
+    local xPlayer = MSK.GetPlayer(playerId)
+    if not xPlayer then return false end
+
+    local tbl = playerTable()
+    if not tbl then return false end
+
+    local data = MySQL.query.await(
+        ("SELECT `isNew` FROM `%s` WHERE `%s` = ?"):format(tbl.table, tbl.identifier),
+        { xPlayer.identifier }
+    )
+
+    if data and data[1] and (data[1].isNew == '1' or data[1].isNew == 1) then
         return true
     end
+
     return false
 end
 exports('isPlayerNew', isPlayerNew)
@@ -15,16 +32,13 @@ whitelistPlayer = function(playerId, player)
     if not playerId then return end
     if not player then return end
 
-    local xPlayer = nil
-    if playerId then 
-        xPlayer = ESX.GetPlayerFromId(playerId)
-    end
+    local xPlayer = playerId and MSK.GetPlayer(playerId) or nil
 
-    local xTarget = nil    
+    local xTarget = nil
     if player.source then
-        xTarget = ESX.GetPlayerFromId(player.source)
+        xTarget = MSK.GetPlayer(player.source)
     elseif player.identifier then
-        xTarget = ESX.GetPlayerFromIdentifier(player.identifier)
+        xTarget = MSK.GetPlayerFromIdentifier(player.identifier)
     elseif player.player then
         xTarget = player.player
     end

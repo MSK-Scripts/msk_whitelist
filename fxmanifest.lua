@@ -4,7 +4,7 @@ games { 'gta5' }
 author 'Musiker15 - MSK Scripts'
 name 'msk_whitelist'
 description 'Ingame Whitelist'
-version '2.0.2'
+version '2.1.0'
 
 lua54 'yes'
 
@@ -19,7 +19,9 @@ escrow_ignore {
 }
 
 shared_scripts {
-    '@es_extended/imports.lua',
+    -- @es_extended/imports.lua is gone: framework calls run through
+    -- msk_core, and importing ESX here made the resource refuse to start
+    -- on a server without it.
     '@msk_core/import.lua',
     'config.lua',
     'translation.lua',
@@ -35,7 +37,6 @@ server_script {
 }
 
 dependencies {
-    'es_extended',
     'oxmysql',
     'msk_core'
 }

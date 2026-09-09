@@ -48,7 +48,19 @@ Config.Commands = {
         teleport = true, -- Teleports the Player back to player_back_in Location
         clear_inventory = true, -- Removes all Items
         clear_weapons = true, -- Removes all Weapons
-        clear_money = true, -- Set money to Default Money [es_extended config]
+        clear_money = true, -- Set the balances below
+
+        -- What the balance is set to when clear_money is on. It used to be read
+        -- from ESX.GetConfig().StartingAccountMoney, which only exists on ESX.
+        -- 'cash' and 'bank' work on every framework, the rest is passed through
+        -- to the framework and skipped when it has no such account: ESX knows
+        -- black_money, QBCore and Qbox know crypto.
+        startMoney = {
+            cash = 0,
+            bank = 0,
+            black = 0,
+        },
+
         banPlayer = {enable = true, time = 2 --[[in hours or set to 'perma']]} -- Bans the player
     }
 }

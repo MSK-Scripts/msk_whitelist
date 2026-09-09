@@ -1,3 +1,33 @@
+-- Restores the character's look after leaving admin mode.
+--
+-- Which resource owns the appearance differs per server, and the ESX pairing of
+-- esx_skin and skinchanger only exists on ESX. The one that is actually running
+-- is used, and when none of them is, the step is skipped rather than failing:
+-- nothing changed the appearance in that case either.
+local function restoreAppearance()
+    if GetResourceState('illenium-appearance') == 'started' then
+        return exports['illenium-appearance']:reloadPedSkin()
+    end
+
+    if GetResourceState('qb-clothing') == 'started' then
+        return TriggerServerEvent('qb-clothes:loadPlayerSkin')
+    end
+
+    if GetResourceState('esx_skin') == 'started' and GetResourceState('skinchanger') == 'started' then
+        -- esx_skin answers through ESX's own callback system, which MSK.Trigger
+        -- does not reach, so ESX is fetched here. This branch is only ever
+        -- reached on a server that actually runs esx_skin.
+        local ok, core = pcall(function() return exports['es_extended']:getSharedObject() end)
+        if not ok or not core then return end
+
+        core.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
+            if skin then
+                TriggerEvent('skinchanger:loadSkin', skin)
+            end
+        end)
+    end
+end
+
 local isNewPlayer, nametags, isAdminOnline = false, false, false
 local playerGamerTags = {}
 
@@ -52,9 +82,7 @@ RegisterNetEvent("msk_whitelist:setClothing", function(duty)
                 if Config.AdminProtection.disableCanBeDamaged then SetEntityCanBeDamaged(playerPed, false) end
             end
         else
-            ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
-                TriggerEvent('skinchanger:loadSkin', skin)
-            end)
+            restoreAppearance()
             
             local playerPed = PlayerPedId()
             if Config.AdminProtection.setArmor then SetPedArmour(playerPed, 0) end
@@ -91,7 +119,7 @@ CreateThread(function()
     while true do
         local sleep = 250
 
-        if ESX.IsPlayerLoaded() and isNewPlayer then
+        if MSK.IsPlayerLoaded() and isNewPlayer then
             local playerPed = PlayerPedId()
             local coords = Config.Locations.player_back_in
             local distance = #(GetEntityCoords(playerPed) - coords)
